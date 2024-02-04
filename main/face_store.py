@@ -1,4 +1,4 @@
-from main.types import Embedding
+from main.type import Embedding
 
 source_embedding: Embedding = None
 

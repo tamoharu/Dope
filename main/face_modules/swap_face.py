@@ -6,7 +6,7 @@ import numpy as np
 import main.globals as globals
 import main.instances as instances
 import main.face_store as face_store
-from main.types import Frame, Kps, Mask, Matrix, Embedding
+from main.type import Frame, Kps, Mask, Matrix, Embedding
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.detect_face import detect_face
 from main.face_modules.embed_face import embed_face

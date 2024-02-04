@@ -18,6 +18,7 @@ def resolve_relative_path(path : str) -> str:
 # TEMP_DIRECTORY_PATH = os.path.join(tempfile.gettempdir(), 'Dope')
 TEMP_DIRECTORY_PATH = resolve_relative_path('../temp')
 TEMP_OUTPUT_VIDEO_NAME = 'temp.mp4'
+TEMP_OUTPUT_IMAGE_NAME = 'temp.png'
 
 
 def get_temp_frame_paths(target_path : str) -> List[str]:
@@ -38,6 +39,11 @@ def get_temp_directory_path(target_path : str) -> str:
 def get_temp_output_video_path(target_path : str) -> str:
 	temp_directory_path = get_temp_directory_path(target_path)
 	return os.path.join(temp_directory_path, TEMP_OUTPUT_VIDEO_NAME)
+
+
+def get_temp_output_image_path(target_path : str) -> str:
+	temp_directory_path = get_temp_directory_path(target_path)
+	return os.path.join(temp_directory_path, TEMP_OUTPUT_IMAGE_NAME)
 
 
 def create_temp(target_path : str) -> None:

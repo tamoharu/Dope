@@ -2,7 +2,7 @@ from typing import Optional, List, Tuple
 from functools import lru_cache
 import cv2
 
-from main.types import Frame, Resolution
+from main.type import Frame, Resolution
 from main.choices import video_template_sizes
 from main.utils.filesystem import is_image, is_video
 

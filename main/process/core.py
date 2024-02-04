@@ -6,19 +6,21 @@ from queue import Queue
 from typing import List
 from logging import INFO
 import time
+import shutil
 
 from tqdm import tqdm
 
 import main.globals as globals
 import main.instances as instances
 import main.face_store as face_store
-from main.types import ProcessFrames, UpdateProcess
-from main.face_modules.swap_face import SwapFace
-from main.utils.vision import read_image, read_static_image, read_static_images, write_image
-from main.utils.filesystem import is_video, get_temp_frame_paths, create_temp, move_temp, clear_temp
-from main.utils.ffmpeg import extract_frames, merge_video, restore_audio
 import main.utils.logger as logger
 import main.utils.wording as wording
+from main.type import ProcessFrames, UpdateProcess
+from main.face_modules.swap_face import SwapFace
+from main.utils.vision import read_image, read_static_image, read_static_images, write_image, detect_video_resolution, pack_resolution
+from main.utils.filesystem import is_video, get_temp_frame_paths, create_temp, move_temp, clear_temp, is_image
+from main.utils.ffmpeg import extract_frames, merge_video, restore_audio, compress_image
+from main.face_modules.smooth_video import smooth_video
 
 
 def multi_process_frames(source_paths : List[str], temp_frame_paths : List[str], process_frames : ProcessFrames) -> None:
@@ -62,44 +64,56 @@ def encode_execution_providers(execution_providers : List[str]) -> List[str]:
 
 def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_progress: UpdateProcess) -> None:
 	source_frames = read_static_images(source_paths)
-	swapper = SwapFace()
-	for temp_frame_path in temp_frame_paths:
-		temp_frame = read_image(temp_frame_path)
-		result_frame = swapper.swap(source_frames=source_frames, target_frame=temp_frame)
-		write_image(temp_frame_path, result_frame)
-		update_progress()
+	if globals.process_mode == 'swap':
+		swapper = SwapFace()
+		for temp_frame_path in temp_frame_paths:
+			temp_frame = read_image(temp_frame_path)
+			result_frame = swapper.swap(source_frames=source_frames, target_frame=temp_frame)
+			write_image(temp_frame_path, result_frame)
+			update_progress()
 
 
-def process_image(source_paths : List[str], target_path : str, output_path : str) -> None:
-	print(source_paths)
-	print(target_path)
-	print(output_path)
-	swapper = SwapFace()
-	source_frames = read_static_images(source_paths)
-	target_frame = read_static_image(target_path)
-	result_frame = swapper.swap(source_frames=source_frames, target_frame=target_frame)
-	write_image(output_path, result_frame)
-
-
-def post_process() -> None:
+def clear() -> None:
 	instances.reset_instances()
 	face_store.reset_face_store()
 
 
-def process_video(start_time : float) -> None:
+def process_image(start_time : float) -> None:
 	clear_temp(globals.target_path)
+	clear()
+	shutil.copy2(globals.target_path, globals.output_path)
+	if globals.process_mode == 'swap':
+		swapper = SwapFace()
+		source_frames = read_static_images(globals.source_paths)
+		target_frame = read_static_image(globals.target_path)
+		result_frame = swapper.swap(source_frames=source_frames, target_frame=target_frame)
+		write_image(globals.output_path, result_frame)
+	logger.info(wording.get('compressing_image'), __name__.upper())
+	if not compress_image(globals.output_path):
+		logger.error(wording.get('compressing_image_failed'), __name__.upper())
+	if is_image(globals.output_path):
+		seconds = '{:.2f}'.format((time.time() - start_time) % 60)
+		logger.info(wording.get('processing_image_succeed').format(seconds = seconds), __name__.upper())
+	else:
+		logger.error(wording.get('processing_image_failed'), __name__.upper())
+
+
+def process_video(start_time : float) -> None:
 	logger.info(wording.get('creating_temp'), __name__.upper())
 	create_temp(globals.target_path)
+	clear()
 	logger.info(wording.get('extracting_frames_fps').format(video_fps = globals.output_video_fps), __name__.upper())
-	extract_frames(globals.target_path, globals.output_video_resolution, globals.output_video_fps)
+	target_video_resolution = detect_video_resolution(globals.target_path)
+	output_video_resolution = pack_resolution(target_video_resolution)
+	extract_frames(globals.target_path, output_video_resolution, globals.output_video_fps)
 	temp_frame_paths = get_temp_frame_paths(globals.target_path)
 	if temp_frame_paths:
 		logger.info(wording.get('processing'), globals.process_mode)
 		multi_process_frames(globals.source_paths, temp_frame_paths, process_frames)
-		post_process()
 	else:
 		logger.error(wording.get('temp_frames_not_found'), __name__.upper())
 		return
+	smooth_video()
 	logger.info(wording.get('merging_video_fps').format(video_fps = globals.output_video_fps), __name__.upper())
 	if not merge_video(globals.target_path, globals.output_video_fps):
 		logger.error(wording.get('merging_video_failed'), __name__.upper())
@@ -108,8 +122,6 @@ def process_video(start_time : float) -> None:
 	if not restore_audio(globals.target_path, globals.output_path, globals.output_video_fps):
 		logger.warn(wording.get('restoring_audio_skipped'), __name__.upper())
 		move_temp(globals.target_path, globals.output_path)
-	logger.info(wording.get('clearing_temp'), __name__.upper())
-	clear_temp(globals.target_path)
 	if is_video(globals.output_path):
 		seconds = '{:.2f}'.format((time.time() - start_time))
 		logger.info(wording.get('processing_video_succeed').format(seconds = seconds), __name__.upper())

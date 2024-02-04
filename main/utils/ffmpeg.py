@@ -2,7 +2,7 @@ from typing import List, Optional
 import subprocess
 
 import main.globals as globals
-from main.types import OutputVideoPreset, Fps
+from main.type import OutputVideoPreset, Fps
 import main.utils.logger as logger
 from main.utils.filesystem import get_temp_frames_pattern, get_temp_output_video_path
 

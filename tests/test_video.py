@@ -16,11 +16,7 @@ def test_process_video():
     print(globals.source_paths)
     print(globals.target_path)
     print(globals.output_path)
-
-    target_video_resolution = detect_video_resolution(globals.target_path)
-    print(target_video_resolution)
-    globals.output_video_resolution = pack_resolution(target_video_resolution)
-
+    
     process_video(0)
 
 test_process_video()

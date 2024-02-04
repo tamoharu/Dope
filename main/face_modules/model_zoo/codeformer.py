@@ -3,7 +3,7 @@ from typing import List, Tuple
 import cv2
 import numpy as np
 
-from main.types import Frame, Kps, Output, Matrix
+from main.type import Frame, Kps, Output, Matrix
 from main.face_modules.model_zoo._base_model import OnnxBaseModel
 
 

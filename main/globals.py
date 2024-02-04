@@ -1,5 +1,5 @@
 from typing import List, Optional
-from main.types import DetectFaceModel, SwapFaceModel, MaskFaceModel, MaskFaceRegion, EnhanceFaceModel, Process, TempFrameFormat, OutputVideoEncoder, OutputVideoPreset, LogLevel
+from main.type import DetectFaceModel, SwapFaceModel, MaskFaceModel, MaskFaceRegion, EnhanceFaceModel, Process, TempFrameFormat, OutputVideoEncoder, OutputVideoPreset, LogLevel
 
 source_paths : List[str] = None
 target_path : str = None
@@ -28,7 +28,6 @@ output_image_quality : int = 80
 output_video_encoder : OutputVideoEncoder = 'libx264'
 output_video_preset : OutputVideoPreset = 'veryfast'
 output_video_quality : int = 80
-output_video_resolution : str = None
 output_video_fps : float = 25
 
 log_level : LogLevel = 'info'

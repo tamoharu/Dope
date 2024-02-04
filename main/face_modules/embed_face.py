@@ -1,6 +1,6 @@
 import main.globals as globals
 import main.instances as instances
-from main.types import Frame, Kps, Embedding
+from main.type import Frame, Kps, Embedding
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.model_zoo.arcface_inswapper import ArcfaceInswapper
 

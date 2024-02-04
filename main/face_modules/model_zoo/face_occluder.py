@@ -3,7 +3,7 @@ from typing import List
 import cv2
 import numpy as np
 
-from main.types import Frame, Output, Mask
+from main.type import Frame, Output, Mask
 from main.face_modules.model_zoo._base_model import OnnxBaseModel
 
 class FaceOccluder(OnnxBaseModel):

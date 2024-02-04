@@ -1,7 +1,7 @@
 from typing import Dict
 from logging import basicConfig, getLogger, Logger, DEBUG, INFO, WARNING, ERROR
 
-from main.types import LogLevel
+from main.type import LogLevel
 
 
 def init(log_level : LogLevel) -> None:
