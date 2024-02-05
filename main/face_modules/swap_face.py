@@ -59,8 +59,8 @@ class SwapFace:
 
     def prepare_source_embedding_list(self, target_frame: Frame, target_kps_list: List[Kps]) -> List[Embedding]:
         source_embedding_list = []
-        if globals.blend_strangth < 100:
-            strength = globals.blend_strangth / 100
+        if globals.blend_strength < 100:
+            strength = globals.blend_strength / 100
             for target_kps in target_kps_list:
                 embedding = embed_face(frame=target_frame, kps=target_kps)
                 source_embedding = face_store.source_embedding * strength + embedding * (1 - strength)

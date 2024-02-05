@@ -16,18 +16,19 @@ enhance_face_model: EnhanceFaceModel = 'codeformer'
 swap_face_model: SwapFaceModel  = 'inswapper'
 process_mode: Process = 'swap'
 
-blend_strangth: int = 100
+blend_strength: int = 100
 
 trim_frame_start : int = None
 trim_frame_end : int = None
 temp_frame_format : TempFrameFormat = 'jpg'
 temp_frame_quality : int = 100
-keep_temp : bool = None
+keep_temp : bool = False
+keep_fps : bool = False
 
-output_image_quality : int = 80
+output_image_quality : int = 100
 output_video_encoder : OutputVideoEncoder = 'libx264'
 output_video_preset : OutputVideoPreset = 'veryfast'
-output_video_quality : int = 80
+output_video_quality : int = 100
 output_video_fps : float = 25
 
 log_level : LogLevel = 'info'

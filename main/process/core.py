@@ -17,7 +17,7 @@ import main.utils.logger as logger
 import main.utils.wording as wording
 from main.type import ProcessFrames, UpdateProcess
 from main.face_modules.swap_face import SwapFace
-from main.utils.vision import read_image, read_static_image, read_static_images, write_image, detect_video_resolution, pack_resolution
+from main.utils.vision import read_image, read_static_image, read_static_images, write_image, detect_video_resolution, pack_resolution, detect_video_fps
 from main.utils.filesystem import is_video, get_temp_frame_paths, create_temp, move_temp, clear_temp, is_image
 from main.utils.ffmpeg import extract_frames, merge_video, restore_audio, compress_image
 from main.face_modules.smooth_video import smooth_video
@@ -74,7 +74,7 @@ def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_
 
 
 def clear() -> None:
-	instances.reset_instances()
+	instances.clear_instances()
 	face_store.reset_face_store()
 
 
@@ -102,6 +102,8 @@ def process_video(start_time : float) -> None:
 	logger.info(wording.get('creating_temp'), __name__.upper())
 	create_temp(globals.target_path)
 	clear()
+	if globals.keep_fps:
+		globals.output_video_fps = detect_video_fps(globals.target_path)
 	logger.info(wording.get('extracting_frames_fps').format(video_fps = globals.output_video_fps), __name__.upper())
 	target_video_resolution = detect_video_resolution(globals.target_path)
 	output_video_resolution = pack_resolution(target_video_resolution)
