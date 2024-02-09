@@ -1,4 +1,4 @@
-Dope
+Mimix
 ==========
 
 Some functions are not available due to under development.
@@ -6,7 +6,7 @@ Some functions are not available due to under development.
 Preview
 -------
 
-![Dope-preview](https://github.com/tamoharu/Dope/assets/133945583/6507e101-f2cf-4581-b82a-8869f1ebdd74)
+![Mimix-preview](https://github.com/tamoharu/Mimix/assets/133945583/6507e101-f2cf-4581-b82a-8869f1ebdd74)
 
 Installation
 ------------

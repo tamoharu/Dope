@@ -10,7 +10,7 @@ def init(log_level : LogLevel) -> None:
 
 
 def get_package_logger() -> Logger:
-	return getLogger('Dope')
+	return getLogger('Mimix')
 
 
 def debug(message : str, scope : str) -> None:
