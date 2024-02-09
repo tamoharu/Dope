@@ -32,3 +32,5 @@ output_video_quality : int = 100
 output_video_fps : float = 25
 
 log_level : LogLevel = 'info'
+
+webcam = False

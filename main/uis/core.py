@@ -10,7 +10,8 @@ def listen():
     target.listen()
     option.listen()
 
-with gradio.Blocks() as ui:
+ui = gradio.Blocks()
+with ui:
     with gradio.Row():
         with gradio.Column(scale=4):
             output.render()
@@ -25,7 +26,5 @@ with gradio.Blocks() as ui:
 
     listen()
 
-
-    
-
-ui.launch()
+def launch():
+    ui.launch()

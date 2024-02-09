@@ -6,7 +6,6 @@ import main.globals as globals
 import main.utils.wording as wording
 import main.uis.temp as temp
 from main.core import main_process
-from main.utils.memory import limit_system_memory
 from main.utils.normalizer import normalize_output_path
 from main.utils.filesystem import clear_temp, is_image, is_video
 from main.uis.components import source, target
@@ -57,8 +56,6 @@ def listen() -> None:
 
 
 def start(output_path : str) -> Tuple[gradio.Image, gradio.Video]:
-	# if globals.system_memory_limit > 0:
-	# 	limit_system_memory(globals.system_memory_limit)
 	temp_source_path = temp.source[temp.source_tab]
 	globals.source_paths = [source_path for source_path in temp_source_path if source_path is not None]
 	globals.target_path = temp.target[temp.target_tab]
