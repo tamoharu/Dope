@@ -65,10 +65,11 @@ def encode_execution_providers(execution_providers : List[str]) -> List[str]:
 def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_progress: UpdateProcess) -> None:
 	source_frames = read_static_images(source_paths)
 	if globals.process_mode == 'swap':
-		swapper = SwapFace()
+		if instances.swapper_instance is None:
+			instances.swapper_instance = SwapFace()
 		for temp_frame_path in temp_frame_paths:
 			temp_frame = read_image(temp_frame_path)
-			result_frame = swapper.swap(source_frames=source_frames, target_frame=temp_frame)
+			result_frame = instances.swapper_instance.swap(source_frames=source_frames, target_frame=temp_frame)
 			write_image(temp_frame_path, result_frame)
 			update_progress()
 
@@ -115,7 +116,6 @@ def process_video(start_time : float) -> None:
 	else:
 		logger.error(wording.get('temp_frames_not_found'), __name__.upper())
 		return
-	smooth_video()
 	logger.info(wording.get('merging_video_fps').format(video_fps = globals.output_video_fps), __name__.upper())
 	if not merge_video(globals.target_path, globals.output_video_fps):
 		logger.error(wording.get('merging_video_failed'), __name__.upper())

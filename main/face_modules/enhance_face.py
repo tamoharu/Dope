@@ -11,7 +11,7 @@ def enhance_face(target_frame: Frame, kps: Kps) -> Tuple[Frame, Matrix]:
     if globals.enhance_face_model == 'codeformer':
         if instances.codeformer_instance is None:
             instances.codeformer_instance = Codeformer(
-                model_path=resolve_relative_path('../../models/enhance_face/codeformer.onnx'),
+                model_path=resolve_relative_path('../../models/codeformer.onnx'),
                 device=globals.device
             )
         enhanced_frame = instances.codeformer_instance.predict(target_frame, kps)

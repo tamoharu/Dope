@@ -9,7 +9,7 @@ def embed_face(frame: Frame, kps: Kps) -> Embedding:
     if globals.swap_face_model == 'inswapper':
         if instances.arcface_inswapper_instance is None:
             instances.arcface_inswapper_instance = ArcfaceInswapper(
-                model_path=resolve_relative_path('../../models/embed_face/arcface_w600k_r50.onnx'),
+                model_path=resolve_relative_path('../../models/arcface_w600k_r50.onnx'),
                 device=globals.device
             )
         return instances.arcface_inswapper_instance.predict(frame, kps)

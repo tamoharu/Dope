@@ -33,7 +33,7 @@ def render():
     global CHOICE_FRAME_SLIDER 
     global EDIT_TAB
 
-    EDIT_TAB = gradio.Tab(visible=False)
+    EDIT_TAB = gradio.Tab(visible=False, label="edit")
     with EDIT_TAB:
         with gradio.Column():
             CHOISE_FRAME_IMAGE = gradio.Image(visible=True, label="preview")

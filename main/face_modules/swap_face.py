@@ -19,7 +19,7 @@ class SwapFace:
     def __init__(self):
         if instances.inswapper_instance is None:
             instances.inswapper_instance = Inswapper(
-                model_path=resolve_relative_path('../../models/swap_face/inswapper_128.onnx'),
+                model_path=resolve_relative_path('../../models/inswapper_128.onnx'),
                 device=globals.device
             )
         self.model = instances.inswapper_instance

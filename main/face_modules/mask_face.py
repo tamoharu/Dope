@@ -13,7 +13,7 @@ def mask_face(frame: Frame, model_name: MaskFaceModel) -> Mask:
     if model_name == 'face_occluder':
         if instances.face_occluder_instance is None:
             instances.face_occluder_instance = FaceOccluder(
-                model_path=resolve_relative_path('../../models/mask_face/face_occluder.onnx'),
+                model_path=resolve_relative_path('../../models/face_occluder.onnx'),
                 device=globals.device
             )
         occlude_mask = instances.face_occluder_instance.predict(frame)
@@ -21,7 +21,7 @@ def mask_face(frame: Frame, model_name: MaskFaceModel) -> Mask:
     if model_name == 'face_parser':
         if instances.face_parser_instance is None:
             instances.face_parser_instance = FaceParser(
-                model_path=resolve_relative_path('../../models/mask_face/face_parser.onnx'),
+                model_path=resolve_relative_path('../../models/face_parser.onnx'),
                 device=globals.device
             )
         region_mask = instances.face_parser_instance.predict(frame, globals.mask_face_regions)
