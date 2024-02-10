@@ -23,7 +23,7 @@ def pre_check() -> bool:
 
 
 def run():
-    # pre_check()
+    pre_check()
     program = ArgumentParser(formatter_class = lambda prog: HelpFormatter(prog, max_help_position = 120), add_help = False)
     program.add_argument('-api', help='Run in API mode', action='store_true', dest='api_mode')
     program.add_argument('-webcam', help='Run in Webcam mode', action='store_true', dest='webcam_mode')
