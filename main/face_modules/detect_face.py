@@ -11,7 +11,7 @@ def detect_face(frame: Frame) -> Tuple[List[Bbox], List[Kps], List[Score]]:
     if globals.detect_face_model == 'yolov8':
         if instances.yolov8_instance is None:
             instances.yolov8_instance = Yolov8(
-                model_path=resolve_relative_path('../../models/yolov8n-face-dynamic.onnx'), 
+                model_path=resolve_relative_path('../../models/yolov8n-face.onnx'), 
                 device=globals.device, 
                 score_threshold=globals.score_threshold, 
                 iou_threshold=globals.iou_threshold

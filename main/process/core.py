@@ -15,7 +15,7 @@ import main.instances as instances
 import main.face_store as face_store
 import main.utils.logger as logger
 import main.utils.wording as wording
-from main.type import ProcessFrames, UpdateProcess
+from main.type import ProcessFrames, UpdateProcess, Frame
 from main.face_modules.swap_face import SwapFace
 from main.utils.vision import read_image, read_static_image, read_static_images, write_image, detect_video_resolution, pack_resolution, detect_video_fps
 from main.utils.filesystem import is_video, get_temp_frame_paths, create_temp, move_temp, clear_temp, is_image
@@ -77,6 +77,17 @@ def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_
 def clear() -> None:
 	instances.clear_instances()
 	face_store.reset_face_store()
+
+
+def process_preview(target_path: str) -> Frame:
+	if globals.process_mode == 'swap':
+		swapper = SwapFace()
+		source_frames = read_static_images(globals.source_paths)
+		target_frame = read_static_image(target_path)
+		result_frame = swapper.swap(source_frames=source_frames, target_frame=target_frame)
+		result_frame = result_frame[:, :, ::-1]
+		return result_frame
+	return None
 
 
 def process_image(start_time : float) -> None:

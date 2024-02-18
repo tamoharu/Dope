@@ -4,8 +4,9 @@ import main.globals as globals
 import main.uis.core as ui
 import main.api.core as api
 
+import main.globals as globals
 from main.utils.filesystem import resolve_relative_path
-from main.utils.download import conditional_download, is_download_done
+from main.utils.download import conditional_download
 
 
 def pre_check() -> bool:
@@ -15,7 +16,7 @@ def pre_check() -> bool:
         'https://github.com/tamoharu/assets/releases/download/models/face_occluder.onnx',
         'https://github.com/tamoharu/assets/releases/download/models/face_parser.onnx',
         'https://github.com/tamoharu/assets/releases/download/models/inswapper_128.onnx',
-        'https://github.com/tamoharu/assets/releases/download/models/yolov8n-face-dynamic.onnx'
+        'https://github.com/tamoharu/assets/releases/download/models/yolov8n-face.onnx'
     ]
     download_directory_path = resolve_relative_path('./models')
     conditional_download(download_directory_path, model_urls)

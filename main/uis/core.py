@@ -1,11 +1,11 @@
 import gradio
 import sys
 sys.path.append('../../')
-from main.uis.components import edit, source, target, output, option
+from main.uis.components import preview, source, target, output, option
 
 def listen():
     output.listen()
-    edit.listen()
+    preview.listen()
     source.listen()
     target.listen()
     option.listen()
@@ -14,8 +14,10 @@ ui = gradio.Blocks()
 with ui:
     with gradio.Row():
         with gradio.Column(scale=4):
-            output.render()
-            edit.render()
+            with gradio.Blocks():
+                with gradio.Row():
+                    output.render()
+                    preview.render()
             with gradio.Row():
                 with gradio.Blocks():
                     source.render()

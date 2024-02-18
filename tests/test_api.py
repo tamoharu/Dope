@@ -8,7 +8,7 @@ def image_to_base64_str(image_path):
         return encoded_string.decode('utf-8')
 
 source_paths = ['./images/hou-1.JPG', './images/hou-2.JPG']
-target_path = './images/manyface.jpg'
+target_path = './images/test-2.mp4'
 
 sources = []
 for source_path in source_paths:
