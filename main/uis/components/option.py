@@ -1,16 +1,12 @@
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import gradio
 import onnxruntime
 
 import main.globals as globals
 from main.instances import clear_instances
-import main.uis.globals as uis_globals
 import main.uis.choices as choices
 import main.uis.temp as temp
-from main.uis.components import target
-from main.utils.vision import detect_video_fps
-from main.utils.filesystem import is_video
 
 
 APPLY_BUTTON: Optional[gradio.Button] = None
@@ -54,6 +50,8 @@ def apply_option() -> None:
     globals.enhance_face_model = temp.enhance_face_model
     globals.swap_face_model = temp.swap_face_model
     globals.blend_strength = temp.blend_strength
+	
+    gradio.Info("Setting Applied")
 
 
 def update_process_mode(process_mode : str) -> gradio.Group:

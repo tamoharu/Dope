@@ -8,7 +8,7 @@ import main.uis.temp as temp
 from main.core import main_process
 from main.utils.normalizer import normalize_output_path
 from main.utils.filesystem import clear_temp, is_image, is_video
-from main.uis.components import source, target
+
 
 OUTPUT_IMAGE : Optional[gradio.Image] = None
 OUTPUT_VIDEO : Optional[gradio.Video] = None

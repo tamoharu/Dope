@@ -47,8 +47,6 @@ async def process_frames(params = Body(...)) -> dict:
         source_paths.append(source_path)
     target = params['target']
     target_extension = params['target_extension']
-    print(globals.target_file_types)
-    print(target_extension)
     if target_extension is None or target_extension not in globals.target_file_types:
         raise ValueError("Unsupported file type")
     target_path = os.path.join(tempfile.mkdtemp(), os.path.basename(f'target{target_extension}'))

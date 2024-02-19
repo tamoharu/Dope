@@ -1,7 +1,7 @@
 import gradio
 import sys
 sys.path.append('../../')
-from main.uis.components import preview, source, target, output, option
+from main.uis.components import about, preview, source, target, output, option
 
 def listen():
     output.listen()
