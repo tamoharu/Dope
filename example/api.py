@@ -3,7 +3,7 @@ import requests
 import time
 
 
-source_paths = ['./images/hou-1.jpg', './images/hou-2.jpg', './images/hou-3.jpg']
+source_paths = ['./images/elon-1.jpg', './images/elon-2.jpg', './images/elon-3.jpg']
 target_path = './images/mark.jpg'
 
 
@@ -28,7 +28,7 @@ def request(source_paths, target_path):
     print("Status Code:", response.status_code)
     if response.status_code == 200:
         output_data = base64.b64decode(response.json()['output'])
-        with open(f'output/{int(time.time())}.jpg', 'wb') as f:
+        with open(f'outputs/{int(time.time())}.jpg', 'wb') as f:
             f.write(output_data)
     else:
         print("Error: The request did not succeed.")

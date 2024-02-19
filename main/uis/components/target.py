@@ -1,7 +1,7 @@
 from typing import List, Tuple, Optional
 import gradio
 
-
+import main.globals as globals
 import main.uis.globals as uis_globals
 import main.uis.temp as temp
 from main.utils.filesystem import is_image, is_video
@@ -12,8 +12,6 @@ TARGET_IMAGE : Optional[List[gradio.Image]] = [None for _ in range(uis_globals.t
 TARGET_VIDEO : Optional[List[gradio.Video]] = [None for _ in range(uis_globals.target_col)]
 TAB = [None for _ in range(uis_globals.target_col)]
 
-filetypes = ['.png', '.jpg', '.jpeg', '.webp', '.mp4', '.mov']
-
 
 def update(file, i) -> Tuple[gradio.Image, gradio.Video, gradio.File]:
 	if file and is_image(file.name):
@@ -23,17 +21,17 @@ def update(file, i) -> Tuple[gradio.Image, gradio.Video, gradio.File]:
 		temp.target[i] = file.name
 		return gradio.Image(value = None, visible = False), gradio.Video(value = file.name, visible = True), gradio.File(value = None, visible = False)
 	temp.target = None
-	return gradio.Image(value = None, visible = False), gradio.Video(value = None, visible = False), gradio.File(value = None, visible = True, file_types = filetypes, file_count = 'single',)
+	return gradio.Image(value = None, visible = False), gradio.Video(value = None, visible = False), gradio.File(value = None, visible = True, file_types = globals.target_file_types, file_count = 'single',)
 
 
 def delete_image(i) -> Tuple[gradio.Image, gradio.File]:
     temp.target[i] = None
-    return gradio.Image(value = None, visible = False), gradio.File(value = None, visible = True, file_types = filetypes, file_count = 'single',)
+    return gradio.Image(value = None, visible = False), gradio.File(value = None, visible = True, file_types = globals.target_file_types, file_count = 'single',)
 
 
 def delete_video(i) -> Tuple[gradio.Video, gradio.File]:
     temp.target[i] = None
-    return gradio.Video(value = None, visible = False), gradio.File(value = None, visible = True, file_types = filetypes, file_count = 'single',)
+    return gradio.Video(value = None, visible = False), gradio.File(value = None, visible = True, file_types = globals.target_file_types, file_count = 'single',)
 
 
 def update_tab(i) -> None:
@@ -51,7 +49,7 @@ def render() -> None:
         with TAB[i]:
             TARGET_FILE[i] = gradio.File(
                 file_count = 'single',
-                file_types = filetypes,
+                file_types = globals.target_file_types,
             )
             TARGET_IMAGE[i] = gradio.Image(
                 visible = False,

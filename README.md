@@ -55,7 +55,9 @@ Required
 
 ```
 sources: List[str]
-target: [str]
+target: str
+target_extension: str
+# target_extension: '.mp4'
 ```
 
 Please refer to `main/globals` for other available settings.

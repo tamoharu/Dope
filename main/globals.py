@@ -15,6 +15,7 @@ mask_face_regions: List[MaskFaceRegion] = ['right-eye', 'left-eye']
 enhance_face_model: EnhanceFaceModel = 'codeformer'
 swap_face_model: SwapFaceModel  = 'inswapper'
 process_mode: Process = 'swap'
+target_file_types = ['.png', '.jpg', '.jpeg', '.webp', '.mp4', '.mov']
 
 blend_strength: int = 100
 
