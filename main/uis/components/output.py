@@ -51,7 +51,6 @@ def listen() -> None:
 	OUTPUT_CLEAR_BUTTON.click(clear, outputs = [ OUTPUT_IMAGE, OUTPUT_VIDEO ])
 	
 
-
 def start(output_path : str) -> Tuple[gradio.Image, gradio.Video]:
 	temp_source_path = temp.source[temp.source_tab]
 	globals.source_paths = [source_path for source_path in temp_source_path if source_path is not None]

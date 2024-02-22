@@ -16,7 +16,7 @@ import main.face_store as face_store
 import main.utils.logger as logger
 import main.utils.wording as wording
 from main.type import ProcessFrames, UpdateProcess, Frame
-from main.face_modules.swap_face import SwapFace
+from main.face_modules.swap_face import swap_face
 from main.utils.vision import read_image, read_static_image, read_static_images, write_image, detect_video_resolution, pack_resolution, detect_video_fps
 from main.utils.filesystem import is_video, get_temp_frame_paths, create_temp, move_temp, clear_temp, is_image
 from main.utils.ffmpeg import extract_frames, merge_video, restore_audio, compress_image
@@ -65,12 +65,9 @@ def encode_execution_providers(execution_providers : List[str]) -> List[str]:
 def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_progress: UpdateProcess) -> None:
 	source_frames = read_static_images(source_paths)
 	if globals.process_mode == 'swap':
-		# if instances.swapper_instance is None:
-		# 	instances.swapper_instance = SwapFace()
-		swapper = SwapFace()
 		for temp_frame_path in temp_frame_paths:
 			temp_frame = read_image(temp_frame_path)
-			result_frame = swapper.swap(source_frames=source_frames, target_frame=temp_frame)
+			result_frame = swap_face(source_frames=source_frames, target_frame=temp_frame)
 			write_image(temp_frame_path, result_frame)
 			update_progress()
 
@@ -82,10 +79,9 @@ def clear() -> None:
 
 def process_preview(target_path: str) -> Frame:
 	if globals.process_mode == 'swap':
-		swapper = SwapFace()
 		source_frames = read_static_images(globals.source_paths)
 		target_frame = read_static_image(target_path)
-		result_frame = swapper.swap(source_frames=source_frames, target_frame=target_frame)
+		result_frame = swap_face(source_frames=source_frames, target_frame=target_frame)
 		result_frame = result_frame[:, :, ::-1]
 		return result_frame
 	return None
@@ -96,10 +92,9 @@ def process_image(start_time : float) -> None:
 	clear()
 	shutil.copy2(globals.target_path, globals.output_path)
 	if globals.process_mode == 'swap':
-		swapper = SwapFace()
 		source_frames = read_static_images(globals.source_paths)
 		target_frame = read_static_image(globals.target_path)
-		result_frame = swapper.swap(source_frames=source_frames, target_frame=target_frame)
+		result_frame = swap_face(source_frames=source_frames, target_frame=target_frame)
 		write_image(globals.output_path, result_frame)
 	logger.info(wording.get('compressing_image'), __name__.upper())
 	if not compress_image(globals.output_path):

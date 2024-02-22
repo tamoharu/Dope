@@ -2,7 +2,7 @@ import cv2
 import sys
 
 sys.path.append('../')
-from main.face_modules.swap_face import SwapFace
+from main.face_modules.swap_face import swap_face
 
 def test_swap_face():
     source_list = []
@@ -15,8 +15,7 @@ def test_swap_face():
 
 
     target = cv2.imread('./images/mark.jpg')
-    swap_face = SwapFace()
-    result = swap_face.swap(source_list, target)
+    result = swap_face(source_list, target)
     cv2.imshow("Face Swap", result)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
