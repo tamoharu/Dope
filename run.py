@@ -18,7 +18,7 @@ def pre_check() -> bool:
         'https://github.com/tamoharu/assets/releases/download/models/inswapper_128.onnx',
         'https://github.com/tamoharu/assets/releases/download/models/yolov8n-face.onnx'
     ]
-    download_directory_path = resolve_relative_path('./models')
+    download_directory_path = resolve_relative_path('../../models')
     conditional_download(download_directory_path, model_urls)
     return True
 

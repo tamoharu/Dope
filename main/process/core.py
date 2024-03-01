@@ -27,9 +27,9 @@ def multi_process_frames(source_paths : List[str], temp_frame_paths : List[str],
 	with tqdm(total = len(temp_frame_paths), desc = 'processing', unit = 'frame', ascii = ' =', disable = INFO in [ 'warn', 'error' ]) as progress:
 		progress.set_postfix(
 		{
-			'execution_providers': encode_execution_providers(globals.device),
-			'execution_thread_count': globals.thread,
-			'execution_queue_count': globals.queue
+			'device': globals.device,
+			'thread': globals.thread,
+			'queue': globals.queue
 		})
 		with ThreadPoolExecutor(max_workers = globals.thread) as executor:
 			futures = []
@@ -56,10 +56,6 @@ def pick_queue(queue : Queue[str], queue_per_future : int) -> List[str]:
 		if not queue.empty():
 			queues.append(queue.get())
 	return queues
-
-
-def encode_execution_providers(execution_providers : List[str]) -> List[str]:
-	return [ execution_provider.replace('ExecutionProvider', '').lower() for execution_provider in execution_providers ]
 
 
 def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_progress: UpdateProcess) -> None:
@@ -108,6 +104,7 @@ def process_image(start_time : float) -> None:
 
 def process_video(start_time : float) -> None:
 	logger.info(wording.get('creating_temp'), __name__.upper())
+	print(f'globals.device: {globals.device}')
 	create_temp(globals.target_path)
 	clear()
 	if globals.keep_fps:
