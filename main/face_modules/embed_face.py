@@ -3,6 +3,7 @@ import main.instances as instances
 from main.type import Frame, Kps, Embedding
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.model_zoo.arcface_inswapper import ArcfaceInswapper
+from main.face_modules.model_zoo.arcface_jp import ArcfaceJP
 
 
 def model_router():

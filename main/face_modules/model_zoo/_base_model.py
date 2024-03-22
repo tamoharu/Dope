@@ -5,6 +5,15 @@ import onnxruntime
 
 
 class OnnxBaseModel:
+    _instances = {}
+
+    @classmethod
+    def get_instance(cls, model_path: str, device: List[str]):
+        if cls not in cls._instances:
+            cls._instances[cls] = cls(model_path, device)
+        return cls._instances[cls]
+    
+    
     def __init__(self, model_path: str, device: List[str]):
         self.lock: Lock = Lock()
         self.semaphore: Semaphore = Semaphore()
@@ -22,3 +31,4 @@ class OnnxBaseModel:
         self.output_names = []
         for output in outputs:
             self.output_names.append(output.name)
+        onnxruntime.set_default_logger_severity(3)

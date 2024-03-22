@@ -2,7 +2,7 @@ from pathlib import Path
 
 import onnxruntime
 
-file = Path('../inswapper_128.onnx')
+file = Path('../efficientnetv2_arcface.onnx')
 model = onnxruntime.InferenceSession(file)
 input = model.get_inputs()
 output = model.get_outputs()
