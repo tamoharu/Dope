@@ -1,8 +1,10 @@
 from typing import List
+import threading
 
 import numpy as np
 import cv2
 
+import main.instances as instances
 from main.type import Frame, Kps, Embedding, Output
 from main.face_modules.model_zoo._base_model import OnnxBaseModel
 
@@ -15,19 +17,25 @@ class ArcfaceInswapper(OnnxBaseModel):
     output
     683: [1, 512]
     '''
+    _lock = threading.Lock()
     def __init__(self, model_path: str, device: List[str]):
-        print('ArcfaceInswapper init')
-        super().__init__(model_path, device)
-        self.model_size = (112, 112)
-        self.model_template = np.array(
-        [
-            [ 0.36167656, 0.40387734 ],
-            [ 0.63696719, 0.40235469 ],
-            [ 0.50019687, 0.56044219 ],
-            [ 0.38710391, 0.72160547 ],
-            [ 0.61507734, 0.72034453 ]
-        ]),
-    
+        with ArcfaceInswapper._lock:
+            if instances.arcface_inswapper_instance is None:
+                print('ArcfaceInswapper init')
+                super().__init__(model_path, device)
+                self.model_size = (112, 112)
+                self.model_template = np.array(
+                [
+                    [ 0.36167656, 0.40387734 ],
+                    [ 0.63696719, 0.40235469 ],
+                    [ 0.50019687, 0.56044219 ],
+                    [ 0.38710391, 0.72160547 ],
+                    [ 0.61507734, 0.72034453 ]
+                ])
+                instances.arcface_inswapper_instance = self
+            else:
+                self.__dict__ = instances.arcface_inswapper_instance.__dict__
+        
 
     def predict(self, frame: Frame, kps: Kps) -> Embedding:
         crop_frame = self.pre_process(frame, kps)

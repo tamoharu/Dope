@@ -1,8 +1,10 @@
 from typing import List, Tuple
+import threading
 
 import cv2
 import numpy as np
 
+import main.instances as instances
 from main.type import Frame, Kps, Output, Matrix
 from main.face_modules.model_zoo._base_model import OnnxBaseModel
 
@@ -18,18 +20,24 @@ class Codeformer(OnnxBaseModel):
     logits: [1, 256, 1024]
     style_feat: [1, 256, 16, 16]
     '''
+    _lock = threading.Lock()
     def __init__(self, model_path: str, device: List[str]):
-        print('Codeformer init')
-        super().__init__(model_path, device)
-        self.model_size = (512, 512)
-        self.model_template = np.array(
-        [
-            [ 0.37691676, 0.46864664 ],
-            [ 0.62285697, 0.46912813 ],
-            [ 0.50123859, 0.61331904 ],
-            [ 0.39308822, 0.72541100 ],
-            [ 0.61150205, 0.72490465 ]
-        ])
+        with Codeformer._lock:
+            if instances.codeformer_instance is None:
+                print('Codeformer init')
+                super().__init__(model_path, device)
+                self.model_size = (512, 512)
+                self.model_template = np.array(
+                [
+                    [ 0.37691676, 0.46864664 ],
+                    [ 0.62285697, 0.46912813 ],
+                    [ 0.50123859, 0.61331904 ],
+                    [ 0.39308822, 0.72541100 ],
+                    [ 0.61150205, 0.72490465 ]
+                ])
+                instances.codeformer_instance = self
+            else:
+                self.__dict__ = instances.codeformer_instance.__dict__
 
 
     def predict(self, frame: Frame, kps: Kps) -> Frame:

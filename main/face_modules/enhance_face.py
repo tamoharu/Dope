@@ -9,12 +9,10 @@ from main.face_modules.model_zoo.codeformer import Codeformer
 
 def model_router():
     if globals.enhance_face_model == 'codeformer':
-        if instances.codeformer_instance is None:
-            instances.codeformer_instance = Codeformer(
-                model_path=resolve_relative_path('../../models/codeformer.onnx'),
-                device=globals.device
-            )
-        return instances.codeformer_instance
+        return Codeformer(
+            model_path=resolve_relative_path('../../models/codeformer.onnx'),
+            device=globals.device
+        )
     else:
         raise NotImplementedError(f"Model {globals.enhance_face_model} not implemented.")
     

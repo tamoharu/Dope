@@ -16,7 +16,7 @@ import main.face_store as face_store
 import main.utils.logger as logger
 import main.utils.wording as wording
 from main.type import ProcessFrames, UpdateProcess, Frame
-from main.face_modules.swap_face import swap_face
+from main.face_modules.swap_face import swap_face, create_source_embedding
 from main.utils.vision import read_image, read_static_image, read_static_images, write_image, detect_video_resolution, pack_resolution, detect_video_fps
 from main.utils.filesystem import is_video, get_temp_frame_paths, create_temp, move_temp, clear_temp, is_image
 from main.utils.ffmpeg import extract_frames, merge_video, restore_audio, compress_image
@@ -60,10 +60,12 @@ def pick_queue(queue : Queue[str], queue_per_future : int) -> List[str]:
 
 def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_progress: UpdateProcess) -> None:
 	source_frames = read_static_images(source_paths)
+	create_source_embedding(source_frames)
+	source_embedding = face_store.source_embedding
 	if globals.process_mode == 'swap':
 		for temp_frame_path in temp_frame_paths:
 			temp_frame = read_image(temp_frame_path)
-			result_frame = swap_face(source_frames=source_frames, target_frame=temp_frame)
+			result_frame = swap_face(source_embedding, temp_frame)
 			write_image(temp_frame_path, result_frame)
 			update_progress()
 

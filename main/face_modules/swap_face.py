@@ -1,4 +1,6 @@
 from typing import List, Tuple
+import threading
+import time
 
 import cv2
 import numpy as np
@@ -17,78 +19,42 @@ from main.face_modules.model_zoo.inswapper import Inswapper
 
 def model_router():
     if globals.swap_face_model == 'inswapper':
-        if instances.inswapper_instance is None:
-            instances.inswapper_instance = Inswapper(
-                model_path=resolve_relative_path('../../models/inswapper_128.onnx'),
-                device=globals.device
-            )
-        return instances.inswapper_instance
+        return Inswapper(
+            model_path=resolve_relative_path('../../models/inswapper_128.onnx'),
+            device=globals.device
+        )
     else:
         raise NotImplementedError(f"Model {globals.swap_face_model} not implemented.")
 
 
-# def swap_face(source_frames: List[Frame], target_frame: Frame) -> Frame:
-#     create_source_embedding(source_frames)
-#     _, target_kps_list, _ = detect_face(frame=target_frame)
-#     source_embedding_list = prepare_source_embedding_list(target_frame, target_kps_list)
-#     temp_frame = target_frame
-#     for i, target_kps in enumerate(target_kps_list):
-#         temp_frame = apply_swap(temp_frame, target_frame, target_kps, source_embedding_list[i])
-#         temp_frame = apply_enhance(temp_frame, target_kps)
-#     return temp_frame
+def create_source_embedding(source_frames: List[Frame]):
+    with threading.Lock():
+        if face_store.source_embedding is None:
+            embedding_list = []
+            for source_frame in source_frames:
+                _, source_kps_list, _ = detect_face(frame=source_frame)
+                source_kps = source_kps_list[0]
+                embedding = embed_face(frame=source_frame, kps=source_kps)
+                embedding_list.append(embedding)
+            face_store.source_embedding = np.mean(embedding_list, axis=0)
 
 
-import time  # 時間計測のためにtimeモジュールをインポート
-
-def swap_face(source_frames: List[Frame], target_frame: Frame) -> Frame:
-    start_time = time.time()  # 全体の開始時間
-    create_source_embedding(source_frames)
-    print(f"create_source_embedding took {time.time() - start_time:.2f} seconds")
-    
+def swap_face(source_embedding: Embedding, target_frame: Frame) -> Frame:
     start_time = time.time()  # detect_faceの開始時間
     _, target_kps_list, _ = detect_face(frame=target_frame)
     print(f"detect_face took {time.time() - start_time:.2f} seconds")
-    
-    start_time = time.time()  # prepare_source_embedding_listの開始時間
-    source_embedding_list = prepare_source_embedding_list(target_frame, target_kps_list)
-    print(f"prepare_source_embedding_list took {time.time() - start_time:.2f} seconds")
-    
+
     temp_frame = target_frame
     for i, target_kps in enumerate(target_kps_list):
         start_time = time.time()  # apply_swapの開始時間
-        temp_frame = apply_swap(temp_frame, target_frame, target_kps, source_embedding_list[i])
+        temp_frame = apply_swap(temp_frame, target_frame, target_kps, source_embedding)
         print(f"apply_swap {i} took {time.time() - start_time:.2f} seconds")
         
-        start_time = time.time()  # apply_enhanceの開始時間
-        temp_frame = apply_enhance(temp_frame, target_kps)
-        print(f"apply_enhance {i} took {time.time() - start_time:.2f} seconds")
+        # start_time = time.time()  # apply_enhanceの開始時間
+        # temp_frame = apply_enhance(temp_frame, target_kps)
+        # print(f"apply_enhance {i} took {time.time() - start_time:.2f} seconds")
     
     return temp_frame
-
-
-def create_source_embedding(source_frames: List[Frame]):
-    if face_store.source_embedding is None:
-        embedding_list = []
-        for source_frame in source_frames:
-            _, source_kps_list, _ = detect_face(frame=source_frame)
-            source_kps = source_kps_list[0]
-            embedding = embed_face(frame=source_frame, kps=source_kps)
-            embedding_list.append(embedding)
-        face_store.source_embedding = np.mean(embedding_list, axis=0)
-
-
-def prepare_source_embedding_list(target_frame: Frame, target_kps_list: List[Kps]) -> List[Embedding]:
-    source_embedding_list = []
-    if globals.blend_strength < 100:
-        strength = globals.blend_strength / 100
-        for target_kps in target_kps_list:
-            embedding = embed_face(frame=target_frame, kps=target_kps)
-            source_embedding = face_store.source_embedding * strength + embedding * (1 - strength)
-            source_embedding_list.append(source_embedding)
-    else:
-        for _ in target_kps_list:
-            source_embedding_list.append(face_store.source_embedding)
-    return source_embedding_list
 
 
 # def apply_swap(temp_frame, target_frame: Frame, target_kps: Kps, embedding: Embedding) -> Frame:

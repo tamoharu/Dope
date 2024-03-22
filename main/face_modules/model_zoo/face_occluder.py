@@ -1,8 +1,10 @@
 from typing import List
+import threading
 
 import cv2
 import numpy as np
 
+import main.instances as instances
 from main.type import Frame, Output, Mask
 from main.face_modules.model_zoo._base_model import OnnxBaseModel
 
@@ -14,10 +16,16 @@ class FaceOccluder(OnnxBaseModel):
     output
     out_mask:0: ['unk__360', 256, 256, 1]
     '''
+    _lock = threading.Lock()
     def __init__(self, model_path: str, device: List[str]):
-        print('FaceOccluder init')
-        super().__init__(model_path, device)
-        self.model_size = (256, 256)
+        with FaceOccluder._lock:
+            if instances.face_occluder_instance is None:
+                print('FaceOccluder init')
+                super().__init__(model_path, device)
+                self.model_size = (256, 256)
+                instances.face_occluder_instance = self
+            else:
+                self.__dict__ = instances.face_occluder_instance.__dict__
 
     
     def predict(self, frame: Frame) -> Mask:

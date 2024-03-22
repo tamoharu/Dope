@@ -1,8 +1,10 @@
 from typing import List
+import threading
 
 import cv2
 import numpy as np
 
+import main.instances as instances
 from main.type import Frame, Output, Mask, MaskFaceRegion
 from main.face_modules.model_zoo._base_model import OnnxBaseModel
 
@@ -17,22 +19,28 @@ class FaceParser(OnnxBaseModel):
     392: [1, 19, 512, 512]
     402: [1, 19, 512, 512]
     '''
+    _lock = threading.Lock()
     def __init__(self, model_path: str, device: List[str]):
-        print('FaceParser init')
-        super().__init__(model_path, device)
-        self.mask_regions =\
-        {
-        'skin': 1,
-        'left-eyebrow': 2,
-        'right-eyebrow': 3,
-        'left-eye': 4,
-        'right-eye': 5,
-        'eye-glasses': 6,
-        'nose': 10,
-        'mouth': 11,
-        'upper-lip': 12,
-        'lower-lip': 13
-        }
+        with FaceParser._lock:
+            if instances.face_parser_instance is None:
+                print('FaceParser init')
+                super().__init__(model_path, device)
+                self.mask_regions =\
+                {
+                'skin': 1,
+                'left-eyebrow': 2,
+                'right-eyebrow': 3,
+                'left-eye': 4,
+                'right-eye': 5,
+                'eye-glasses': 6,
+                'nose': 10,
+                'mouth': 11,
+                'upper-lip': 12,
+                'lower-lip': 13
+                }
+                instances.face_parser_instance = self
+            else:
+                self.__dict__ = instances.face_parser_instance.__dict__
 
 
     def predict(self, frame: Frame, face_mask_regions: List[MaskFaceRegion]) -> Mask:

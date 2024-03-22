@@ -9,14 +9,12 @@ from main.face_modules.model_zoo.yolov8 import Yolov8
 
 def model_router():
     if globals.detect_face_model == 'yolov8':
-        if instances.yolov8_instance is None:
-            instances.yolov8_instance = Yolov8(
-                model_path=resolve_relative_path('../../models/yolov8n-face.onnx'), 
-                device=globals.device, 
-                score_threshold=globals.score_threshold, 
-                iou_threshold=globals.iou_threshold
-                )
-        return instances.yolov8_instance
+        return Yolov8(
+            model_path=resolve_relative_path('../../models/yolov8n-face.onnx'), 
+            device=globals.device, 
+            score_threshold=globals.score_threshold, 
+            iou_threshold=globals.iou_threshold
+        )
     else:
         raise NotImplementedError(f"Model {globals.detect_face_model} not implemented.")
 

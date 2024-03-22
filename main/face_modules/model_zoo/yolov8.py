@@ -1,8 +1,10 @@
 from typing import List, Tuple
+import threading
 
 import cv2
 import numpy as np
 
+import main.instances as instances
 from main.type import Frame, Bbox, Kps, Score, Output
 from main.face_modules.model_zoo._base_model import OnnxBaseModel
 
@@ -15,12 +17,18 @@ class Yolov8(OnnxBaseModel):
     output
     output0: [n, 20, 8400]
     '''
+    _lock = threading.Lock()
     def __init__(self, model_path: str, device: List[str], score_threshold: float, iou_threshold: float):
-        print('YOLOv8 init')
-        super().__init__(model_path, device)
-        self.model_size = (640, 640)
-        self.score_threshold = score_threshold
-        self.iou_threshold = iou_threshold
+        with Yolov8._lock:
+            if instances.yolov8_instance is None:
+                print('YOLOv8 init')
+                super().__init__(model_path, device)
+                self.model_size = (640, 640)
+                self.score_threshold = score_threshold
+                self.iou_threshold = iou_threshold
+                instances.yolov8_instance = self
+            else:
+                self.__dict__ = instances.yolov8_instance.__dict__
 
     
     def predict(self, frame) -> Tuple[List[Bbox], List[Kps], List[Score]]:

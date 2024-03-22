@@ -3,17 +3,14 @@ import main.instances as instances
 from main.type import Frame, Kps, Embedding
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.model_zoo.arcface_inswapper import ArcfaceInswapper
-from main.face_modules.model_zoo.arcface_jp import ArcfaceJP
 
 
 def model_router():
     if globals.swap_face_model == 'inswapper':
-        if instances.arcface_inswapper_instance is None:
-            instances.arcface_inswapper_instance = ArcfaceInswapper(
-                model_path=resolve_relative_path('../../models/arcface_w600k_r50.onnx'),
-                device=globals.device
-            )
-        return instances.arcface_inswapper_instance
+        return ArcfaceInswapper(
+            model_path=resolve_relative_path('../../models/arcface_w600k_r50.onnx'),
+            device=globals.device
+        )
     else:
         raise NotImplementedError(f"Model {globals.swap_face_model} not implemented.")
     

@@ -11,20 +11,18 @@ from main.face_modules.model_zoo.face_parser import FaceParser
 
 def mask_face(frame: Frame, model_name: MaskFaceModel) -> Mask:
     if model_name == 'face_occluder':
-        if instances.face_occluder_instance is None:
-            instances.face_occluder_instance = FaceOccluder(
-                model_path=resolve_relative_path('../../models/face_occluder.onnx'),
-                device=globals.device
-            )
-        occlude_mask = instances.face_occluder_instance.predict(frame)
+        model = FaceOccluder(
+            model_path=resolve_relative_path('../../models/face_occluder.onnx'),
+            device=globals.device
+        )
+        occlude_mask = model.predict(frame)
         return occlude_mask
     if model_name == 'face_parser':
-        if instances.face_parser_instance is None:
-            instances.face_parser_instance = FaceParser(
-                model_path=resolve_relative_path('../../models/face_parser.onnx'),
-                device=globals.device
-            )
-        region_mask = instances.face_parser_instance.predict(frame, globals.mask_face_regions)
+        model = FaceParser(
+            model_path=resolve_relative_path('../../models/face_parser.onnx'),
+            device=globals.device
+        )
+        region_mask = model.predict(frame, globals.mask_face_regions)
         return region_mask
     if model_name == 'box':
         crop_size = frame.shape[:2][::-1]
