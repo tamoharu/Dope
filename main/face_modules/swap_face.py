@@ -7,7 +7,7 @@ import numpy as np
 
 import main.globals as globals
 import main.face_store as face_store
-from main.type import Frame, Kps, Mask, Matrix, Embedding, Template, Size
+from main.type import Frame, Kps, Matrix, Embedding, Template, Size
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.detect_face import detect_face
 from main.face_modules.embed_face import embed_face
@@ -39,44 +39,23 @@ def create_source_embedding(source_frames: List[Frame]):
 
 
 def swap_face(source_embedding: Embedding, target_frame: Frame) -> Frame:
-    start_time = time.time()  # detect_faceの開始時間
     _, target_kps_list, _ = detect_face(frame=target_frame)
-    print(f"detect_face took {time.time() - start_time:.2f} seconds")
 
     temp_frame = target_frame
     for i, target_kps in enumerate(target_kps_list):
-        start_time = time.time()  # apply_swapの開始時間
         temp_frame = apply_swap(temp_frame, target_frame, target_kps, source_embedding)
-        print(f"apply_swap {i} took {time.time() - start_time:.2f} seconds")
-        
-        # start_time = time.time()  # apply_enhanceの開始時間
-        # temp_frame = apply_enhance(temp_frame, target_kps)
-        # print(f"apply_enhance {i} took {time.time() - start_time:.2f} seconds")
+        if globals.enhance_face_model:
+            temp_frame = apply_enhance(temp_frame, target_kps)
     
     return temp_frame
 
 
 def apply_swap(temp_frame, target_frame: Frame, target_kps: Kps, embedding: Embedding) -> Frame:
-    start_time = time.time()  # apply_swapの開始時間
     model = model_router()
-    print(f"model_router took {time.time() - start_time:.2f} seconds")
-    
-    start_time = time.time()  # warp_face_kpsの開始時間
     crop_frame, affine_matrix = warp_face_kps(target_frame, target_kps, model.model_template, model.model_size)
-    print(f"warp_face_kps took {time.time() - start_time:.2f} seconds")
-
-    start_time = time.time()  # mask_faceの開始時間
     crop_mask = mask_face(frame=crop_frame, model_name=globals.mask_face_model)
-    print(f"mask_face took {time.time() - start_time:.2f} seconds")
-
-    start_time = time.time()  # predictの開始時間
     crop_frame = model.predict(target_crop_frame=crop_frame, source_embedding=embedding)
-    print(f"inswapper predict took {time.time() - start_time:.2f} seconds")
-    
-    start_time = time.time()  # paste_backの開始時間
     result_frame = paste_back(temp_frame, crop_frame, crop_mask, affine_matrix)
-    print(f"paste_back took {time.time() - start_time:.2f} seconds")
-    
     return result_frame
 
 

@@ -20,7 +20,6 @@ class FaceOccluder(OnnxBaseModel):
     def __init__(self, model_path: str, device: List[str]):
         with FaceOccluder._lock:
             if instances.face_occluder_instance is None:
-                print('FaceOccluder init')
                 super().__init__(model_path, device)
                 self.model_size = (256, 256)
                 instances.face_occluder_instance = self

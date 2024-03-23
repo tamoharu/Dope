@@ -8,8 +8,6 @@ import main.uis.choices as choices
 from main.utils.device import encode_devices, decode_devices
 
 
-# APPLY_BUTTON
-# : Optional[gradio.Button] = None
 PROCESS_MODE_DROPDOWN: Optional[gradio.Dropdown] = None
 THREAD_SLIDER: Optional[gradio.Slider] = None
 QUEUE_SLIDER: Optional[gradio.Slider] = None
@@ -76,8 +74,6 @@ def update_swap_model(swap_model : str) -> None:
 
 
 def render():
-
-    # global APPLY_BUTTON
     global PROCESS_MODE_DROPDOWN
     global THREAD_SLIDER
     global QUEUE_SLIDER
@@ -93,7 +89,6 @@ def render():
     global DETECT_GROUP
     global SWAP_GROUP
 
-    # APPLY_BUTTON = gradio.Button(value = 'Apply Setting', variant = 'primary')
     PROCESS_MODE_DROPDOWN = gradio.Dropdown(choices = choices.process_mode, label='Process Mode', value = globals.process_mode)
     
     EXECUTION_GROUP = gradio.Group()
@@ -119,7 +114,6 @@ def render():
 
 
 def listen():
-    # APPLY_BUTTON.click(fn = apply_option)
     PROCESS_MODE_DROPDOWN.change(fn = update_process_mode, inputs = PROCESS_MODE_DROPDOWN, outputs = SWAP_GROUP)
     THREAD_SLIDER.change(fn = update_thread, inputs = THREAD_SLIDER)
     QUEUE_SLIDER.change(fn = update_queue, inputs = QUEUE_SLIDER)

@@ -23,7 +23,6 @@ class FaceParser(OnnxBaseModel):
     def __init__(self, model_path: str, device: List[str]):
         with FaceParser._lock:
             if instances.face_parser_instance is None:
-                print('FaceParser init')
                 super().__init__(model_path, device)
                 self.mask_regions =\
                 {

@@ -24,7 +24,6 @@ class Codeformer(OnnxBaseModel):
     def __init__(self, model_path: str, device: List[str]):
         with Codeformer._lock:
             if instances.codeformer_instance is None:
-                print('Codeformer init')
                 super().__init__(model_path, device)
                 self.model_size = (512, 512)
                 self.model_template = np.array(

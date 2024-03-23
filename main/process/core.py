@@ -120,6 +120,8 @@ def process_video(start_time : float) -> None:
 	temp_frame_paths = get_temp_frame_paths(globals.target_path)
 	if temp_frame_paths:
 		logger.info(wording.get('processing'), globals.process_mode)
+		source_frames = read_static_images(globals.source_paths)
+		create_source_embedding(source_frames)
 		multi_process_frames(globals.source_paths, temp_frame_paths, process_frames)
 	else:
 		logger.error(wording.get('temp_frames_not_found'), __name__.upper())

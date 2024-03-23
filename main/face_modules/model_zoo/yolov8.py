@@ -21,7 +21,6 @@ class Yolov8(OnnxBaseModel):
     def __init__(self, model_path: str, device: List[str], score_threshold: float, iou_threshold: float):
         with Yolov8._lock:
             if instances.yolov8_instance is None:
-                print('YOLOv8 init')
                 super().__init__(model_path, device)
                 self.model_size = (640, 640)
                 self.score_threshold = score_threshold

@@ -12,11 +12,7 @@ import filetype
 
 import main.globals
 
-def resolve_relative_path(path : str) -> str:
-	return os.path.abspath(os.path.join(os.path.dirname(__file__), path))
-
 TEMP_DIRECTORY_PATH = os.path.join(tempfile.gettempdir(), 'Mimix')
-# TEMP_DIRECTORY_PATH = resolve_relative_path('../temp')
 TEMP_OUTPUT_VIDEO_NAME = 'temp.mp4'
 TEMP_OUTPUT_IMAGE_NAME = 'temp.png'
 
@@ -94,8 +90,8 @@ def is_video(video_path : str) -> bool:
 	return False
 
 
-# def resolve_relative_path(path : str) -> str:
-# 	return os.path.abspath(os.path.join(os.path.dirname(__file__), path))
+def resolve_relative_path(path : str) -> str:
+	return os.path.abspath(os.path.join(os.path.dirname(__file__), path))
 
 
 def list_directory(directory_path : str) -> Optional[List[str]]:

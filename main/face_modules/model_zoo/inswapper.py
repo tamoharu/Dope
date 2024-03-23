@@ -22,7 +22,6 @@ class Inswapper(OnnxBaseModel):
     def __init__(self, model_path: str, device: List[str]):
         with Inswapper._lock:
             if instances.inswapper_instance is None:
-                print('Inswapper init')
                 super().__init__(model_path, device)
                 self.model_size = (128, 128)
                 self.model_template = np.array(

@@ -21,7 +21,6 @@ class ArcfaceInswapper(OnnxBaseModel):
     def __init__(self, model_path: str, device: List[str]):
         with ArcfaceInswapper._lock:
             if instances.arcface_inswapper_instance is None:
-                print('ArcfaceInswapper init')
                 super().__init__(model_path, device)
                 self.model_size = (112, 112)
                 self.model_template = np.array(
