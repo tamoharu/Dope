@@ -14,7 +14,7 @@ def pre_check() -> bool:
         'https://github.com/tamoharu/assets/releases/download/models/arcface_w600k_r50.onnx',
         'https://github.com/tamoharu/assets/releases/download/models/codeformer.onnx',
         'https://github.com/tamoharu/assets/releases/download/models/face_occluder.onnx',
-        'https://github.com/tamoharu/assets/releases/download/models/face_parser.onnx',
+        # 'https://github.com/tamoharu/assets/releases/download/models/face_parser.onnx',
         'https://github.com/tamoharu/assets/releases/download/models/inswapper_128.onnx',
         'https://github.com/tamoharu/assets/releases/download/models/yolov8n-face.onnx'
     ]
