@@ -1,7 +1,6 @@
 from typing import List, Tuple
 
 import main.globals as globals
-import main.instances as instances
 from main.type import Frame, Bbox, Kps, Score
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.model_zoo.yolov8 import Yolov8

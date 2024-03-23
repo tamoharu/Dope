@@ -1,7 +1,6 @@
 from typing import Tuple
 
 import main.globals as globals
-import main.instances as instances
 from main.type import Frame, Kps, Matrix
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.model_zoo.codeformer import Codeformer

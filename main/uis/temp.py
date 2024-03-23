@@ -17,4 +17,3 @@ score_threshold = globals.score_threshold
 iou_threshold = globals.iou_threshold
 enhance_face_model = globals.enhance_face_model
 swap_face_model = globals.swap_face_model
-blend_strength = globals.blend_strength

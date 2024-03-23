@@ -6,7 +6,6 @@ import cv2
 import numpy as np
 
 import main.globals as globals
-import main.instances as instances
 import main.face_store as face_store
 from main.type import Frame, Kps, Mask, Matrix, Embedding, Template, Size
 from main.utils.filesystem import resolve_relative_path
@@ -57,24 +56,6 @@ def swap_face(source_embedding: Embedding, target_frame: Frame) -> Frame:
     return temp_frame
 
 
-# def apply_swap(temp_frame, target_frame: Frame, target_kps: Kps, embedding: Embedding) -> Frame:
-#     model = model_router()
-#     crop_frame, affine_matrix = warp_face_kps(target_frame, target_kps, model.model_template, model.model_size)
-#     mask_list = []
-#     if 'face_occluder' in globals.mask_face_model:
-#         crop_mask = mask_face(frame=crop_frame, model_name='face_occluder')
-#         mask_list.append(crop_mask)
-#     if 'box' in globals.mask_face_model:
-#         crop_mask = mask_face(frame=crop_frame, model_name='box')
-#         mask_list.append(crop_mask)
-#     crop_frame = model.predict(target_crop_frame=crop_frame, source_embedding=embedding)
-#     if 'face_parser' in globals.mask_face_model:
-#         crop_mask = mask_face(frame=crop_frame, model_name='face_parser')
-#         mask_list.append(crop_mask)
-#     crop_mask = np.minimum.reduce(mask_list).clip(0, 1)
-#     return paste_back(temp_frame, crop_frame, crop_mask, affine_matrix)
-
-
 def apply_swap(temp_frame, target_frame: Frame, target_kps: Kps, embedding: Embedding) -> Frame:
     start_time = time.time()  # apply_swapの開始時間
     model = model_router()
@@ -83,33 +64,14 @@ def apply_swap(temp_frame, target_frame: Frame, target_kps: Kps, embedding: Embe
     start_time = time.time()  # warp_face_kpsの開始時間
     crop_frame, affine_matrix = warp_face_kps(target_frame, target_kps, model.model_template, model.model_size)
     print(f"warp_face_kps took {time.time() - start_time:.2f} seconds")
-    
-    mask_list = []
-    if 'face_occluder' in globals.mask_face_model:
-        start_time = time.time()  # mask_face (face_occluder)の開始時間
-        crop_mask = mask_face(frame=crop_frame, model_name='face_occluder')
-        mask_list.append(crop_mask)
-        print(f"mask_face (face_occluder) took {time.time() - start_time:.2f} seconds")
-    
-    if 'box' in globals.mask_face_model:
-        start_time = time.time()  # mask_face (box)の開始時間
-        crop_mask = mask_face(frame=crop_frame, model_name='box')
-        mask_list.append(crop_mask)
-        print(f"mask_face (box) took {time.time() - start_time:.2f} seconds")
-    
-    start_time = time.time()  # model.predictの開始時間
+
+    start_time = time.time()  # mask_faceの開始時間
+    crop_mask = mask_face(frame=crop_frame, model_name=globals.mask_face_model)
+    print(f"mask_face took {time.time() - start_time:.2f} seconds")
+
+    start_time = time.time()  # predictの開始時間
     crop_frame = model.predict(target_crop_frame=crop_frame, source_embedding=embedding)
-    print(f"model.predict took {time.time() - start_time:.2f} seconds")
-    
-    if 'face_parser' in globals.mask_face_model:
-        start_time = time.time()  # mask_face (face_parser)の開始時間
-        crop_mask = mask_face(frame=crop_frame, model_name='face_parser')
-        mask_list.append(crop_mask)
-        print(f"mask_face (face_parser) took {time.time() - start_time:.2f} seconds")
-    
-    start_time = time.time()  # np.minimum.reduceの開始時間
-    crop_mask = np.minimum.reduce(mask_list).clip(0, 1)
-    print(f"np.minimum.reduce took {time.time() - start_time:.2f} seconds")
+    print(f"inswapper predict took {time.time() - start_time:.2f} seconds")
     
     start_time = time.time()  # paste_backの開始時間
     result_frame = paste_back(temp_frame, crop_frame, crop_mask, affine_matrix)

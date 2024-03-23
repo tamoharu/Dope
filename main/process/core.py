@@ -58,9 +58,12 @@ def pick_queue(queue : Queue[str], queue_per_future : int) -> List[str]:
 	return queues
 
 
+def clear() -> None:
+	instances.clear_instances()
+	face_store.reset_face_store()
+
+
 def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_progress: UpdateProcess) -> None:
-	source_frames = read_static_images(source_paths)
-	create_source_embedding(source_frames)
 	source_embedding = face_store.source_embedding
 	if globals.process_mode == 'swap':
 		for temp_frame_path in temp_frame_paths:
@@ -70,16 +73,13 @@ def process_frames(source_paths: List[str], temp_frame_paths: List[str], update_
 			update_progress()
 
 
-def clear() -> None:
-	instances.clear_instances()
-	face_store.reset_face_store()
-
-
 def process_preview(target_path: str) -> Frame:
 	if globals.process_mode == 'swap':
 		source_frames = read_static_images(globals.source_paths)
 		target_frame = read_static_image(target_path)
-		result_frame = swap_face(source_frames=source_frames, target_frame=target_frame)
+		create_source_embedding(source_frames)
+		source_embedding = face_store.source_embedding
+		result_frame = swap_face(source_embedding, target_frame)
 		result_frame = result_frame[:, :, ::-1]
 		return result_frame
 	return None
@@ -92,7 +92,9 @@ def process_image(start_time : float) -> None:
 	if globals.process_mode == 'swap':
 		source_frames = read_static_images(globals.source_paths)
 		target_frame = read_static_image(globals.target_path)
-		result_frame = swap_face(source_frames=source_frames, target_frame=target_frame)
+		create_source_embedding(source_frames)
+		source_embedding = face_store.source_embedding
+		result_frame = swap_face(source_embedding ,target_frame)
 		write_image(globals.output_path, result_frame)
 	logger.info(wording.get('compressing_image'), __name__.upper())
 	if not compress_image(globals.output_path):

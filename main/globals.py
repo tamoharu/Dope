@@ -1,23 +1,22 @@
-from typing import List, Optional
+from typing import List
 from main.type import DetectFaceModel, SwapFaceModel, MaskFaceModel, MaskFaceRegion, EnhanceFaceModel, Process, TempFrameFormat, OutputVideoEncoder, OutputVideoPreset, LogLevel
 
-source_paths : List[str] = None
-target_path : str = None
-output_path : str = None
+
 thread: int = 32
 queue: int = 4
 device = ['CPUExecutionProvider']
+source_paths : List[str] = None
+target_path : str = None
+output_path : str = None
 score_threshold: float = 0.35
 iou_threshold: float = 0.4
 detect_face_model: DetectFaceModel  = 'yolov8'
-mask_face_model: List[MaskFaceModel] = ['box']
+mask_face_model: MaskFaceModel = 'box'
 mask_face_regions: List[MaskFaceRegion] = ['right-eye', 'left-eye']
 enhance_face_model: EnhanceFaceModel = 'codeformer'
 swap_face_model: SwapFaceModel  = 'inswapper'
 process_mode: Process = 'swap'
 target_file_types = ['.png', '.jpg', '.jpeg', '.webp', '.mp4', '.mov']
-
-blend_strength: int = 100
 
 trim_frame_start : int = None
 trim_frame_end : int = None

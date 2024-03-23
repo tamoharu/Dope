@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 
 import main.globals as globals
-import main.instances as instances
 from main.type import Frame, Mask, MaskFaceModel
 from main.utils.filesystem import resolve_relative_path
 from main.face_modules.model_zoo.face_occluder import FaceOccluder

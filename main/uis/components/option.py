@@ -20,27 +20,10 @@ DETECT_SCORE_THRESHOLD_SLIDER: Optional[gradio.Slider] = None
 DETECT_IOU_THRESHOLD_SLIDER: Optional[gradio.Slider] = None
 ENHANCE_MODEL_DROPDOWN: Optional[gradio.Dropdown] = None
 SWAP_MODEL_DROPDOWN: Optional[gradio.Dropdown] = None
-BLEND_STRENGTH_SLIDER: Optional[gradio.Slider] = None
 EXECUTION_GROUP: Optional[gradio.Group] = None
 VIDEO_GROUP: Optional[gradio.Group] = None
 DETECT_GROUP: Optional[gradio.Group] = None
 SWAP_GROUP: Optional[gradio.Group] = None
-
-
-
-# def apply_option() -> None:
-#     clear_instances()
-#     globals.process_mode = globals.process_mode
-#     globals.thread = globals.thread
-#     globals.queue = globals.queue
-#     globals.device = globals.device
-#     globals.detect_face_model = globals.detect_face_model
-#     globals.score_threshold = globals.score_threshold
-#     globals.iou_threshold = globals.iou_threshold
-#     globals.enhance_face_model = globals.enhance_face_model
-#     globals.swap_face_model = globals.swap_face_model
-#     globals.blend_strength = globals.blend_strength
-#     gradio.Info("Setting Applied")
 
 
 def update_process_mode(process_mode : str) -> gradio.Group:
@@ -92,10 +75,6 @@ def update_swap_model(swap_model : str) -> None:
     globals.swap_face_model = swap_model
 
 
-def update_blend_strength(blend_strength : float) -> None:
-    globals.blend_strength = blend_strength
-
-
 def render():
 
     # global APPLY_BUTTON
@@ -109,7 +88,6 @@ def render():
     global DETECT_IOU_THRESHOLD_SLIDER
     global ENHANCE_MODEL_DROPDOWN
     global SWAP_MODEL_DROPDOWN
-    global BLEND_STRENGTH_SLIDER
     global EXECUTION_GROUP
     global VIDEO_GROUP
     global DETECT_GROUP
@@ -138,7 +116,6 @@ def render():
     with SWAP_GROUP:
         ENHANCE_MODEL_DROPDOWN = gradio.Dropdown(choices = choices.enhance_face_model, label = 'Enhance Face Model', value = globals.enhance_face_model)
         SWAP_MODEL_DROPDOWN = gradio.Dropdown(choices = choices.swap_face_model, label = 'Swap Face Model', value = globals.swap_face_model)
-        BLEND_STRENGTH_SLIDER = gradio.Slider(minimum = 0, maximum = 100, step = 1, label = 'Blend Strength', value = globals.blend_strength)
 
 
 def listen():
@@ -153,4 +130,3 @@ def listen():
     DETECT_IOU_THRESHOLD_SLIDER.change(fn = update_detect_iou_threshold, inputs = DETECT_IOU_THRESHOLD_SLIDER)
     ENHANCE_MODEL_DROPDOWN.change(fn = update_enhance_model, inputs = ENHANCE_MODEL_DROPDOWN)
     SWAP_MODEL_DROPDOWN.change(fn = update_swap_model, inputs = SWAP_MODEL_DROPDOWN)
-    BLEND_STRENGTH_SLIDER.change(fn = update_blend_strength, inputs = BLEND_STRENGTH_SLIDER)
