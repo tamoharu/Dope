@@ -4,9 +4,10 @@ import os
 import platform
 import tempfile
 import subprocess
-import inquirer
 from argparse import ArgumentParser, HelpFormatter
 
+subprocess.call([ 'pip', 'install' , 'inquirer', '-q' ])
+import inquirer
 
 ONNXRUNTIMES : Dict[str, Tuple[str, str]] = {}
 
@@ -72,12 +73,6 @@ def run(program : ArgumentParser) -> None:
 				subprocess.call([ 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--extra-index-url', 'https://pkgs.dev.azure.com/onnxruntime/onnxruntime/_packaging/onnxruntime-cuda-12/pypi/simple', '--force-reinstall' ])
 			else:
 				subprocess.call([ 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--force-reinstall' ])
-
-
-
-import subprocess
-
-subprocess.call([ 'pip', 'install' , 'inquirer', '-q' ])
 
 
 if __name__ == '__main__':
